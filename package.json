@@ -1,0 +1,22 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "Minimal command engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/repraze-org/micromand.git"
+  },
+  "keywords": [
+    "command"
+  ],
+  "author": "Thomas Dubosc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/repraze-org/micromand/issues"
+  },
+  "homepage": "https://github.com/repraze-org/micromand#readme"
+}
