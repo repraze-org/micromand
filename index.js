@@ -36,16 +36,15 @@ class Parser{
             let command = this.commands[commandName];
             try{
                 if(command.match(tockens, runtime)){
-                    command.run(runtime);
+                    return command.run(runtime);
                 }else{
-                    console.log(command.usage());
+                    return Promise.reject(new Error(command.usage()));
                 }
             }catch(e){
-                console.log(e.message);
-                console.log(command.usage());
+                return Promise.reject(new Error(command.usage()));
             }
         }else{
-            console.log("Command not found");
+            return Promise.reject(new Error("Command not found"));
         }
     }
     static tokenize(str){
@@ -88,8 +87,8 @@ class Command{
         }
         return false;
     }
-    run(runtime){
-        this.settings.run(runtime);
+    async run(runtime){
+        await this.settings.run(runtime);
     }
 }
 
@@ -102,7 +101,7 @@ class Usage{
             .map(def=>{
                 if(def.startsWith("[")){
                     let [,type,name,multy] = def.match(/\[(?:([^:\+]*):)?([^\+]*)(\+)?\]/);
-                    console.log(type,name,multy);
+                    // console.log(type,name,multy);
                     return {
                         multy : !!multy,
                         match : (tocken, runtime, args)=>{
@@ -135,7 +134,6 @@ class Usage{
     }
     // tockens can be left
     match(tockens, runtime){
-        console.log(tockens);
         if(tockens.length < this.syntax.length){
             return false;
         }
