@@ -1,5 +1,5 @@
 {
-  "name": "y",
+  "name": "micromand",
   "version": "1.0.0",
   "description": "Minimal command engine",
   "main": "index.js",
@@ -13,7 +13,7 @@
   "keywords": [
     "command"
   ],
-  "author": "Thomas Dubosc",
+  "author": "Thomas Dubosc (http://repraze.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/repraze-org/micromand/issues"
