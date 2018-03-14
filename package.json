@@ -1,6 +1,6 @@
 {
   "name": "micromand",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Minimal command engine",
   "main": "index.js",
   "scripts": {
