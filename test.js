@@ -142,6 +142,62 @@ describe('micromand', function(){
             });
         });
     });
+
+    describe('routing', function(){
+        // shop buy item
+        // shop look item
+
+        // shop [route:action] [item]
+
+        // shop [route(buy):action] [item]
+        // shop buy:action [item]
+
+        // shop [route:buy] [item]
+        // shop [route:look] [item]
+
+        // shop [route:look] [item]
+
+        // ???
+
+
+        it('should handle argument', function(done){
+            let p = new Parser();
+
+            p.use(new Validator('route', function(str, target){
+                if(str != target){
+                    throw new Error('Invalid routing');
+                }
+                return str;
+            }));
+
+            p.use(new Command('ping', {
+                usage : "ping [route(foo):test]"
+            }, function(runtime){
+                expect(runtime.args.test).to.equal("foo");
+            }));
+
+            p.run("ping foo").then(done);
+        });
+
+        it('should handle arguments', function(done){
+            let p = new Parser();
+
+            p.use(new Validator('route', function(str, foo, bar){
+                if(foo != "foo" || bar != "bar"){
+                    throw new Error('Invalid routing');
+                }
+                return str;
+            }));
+
+            p.use(new Command('ping', {
+                usage : "ping [route(foo,bar):test]"
+            }, function(runtime){
+                expect(runtime.args.test).to.equal("foo");
+            }));
+
+            p.run("ping foo").then(done);
+        });
+    });
 });
 
 // let p = new Parser();

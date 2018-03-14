@@ -101,6 +101,15 @@ class Usage{
             .map(def=>{
                 if(def.startsWith("[")){
                     let [,type,name,multy] = def.match(/\[(?:([^:\+]*):)?([^\+]*)(\+)?\]/);
+                    let valArgs;
+                    if(type){
+                        [,type,valArgs] = type.match(/([^(]+)(?:\(([^)]*)\))?/);
+                        if(valArgs){
+                            valArgs = valArgs.split(',');
+                        }else{
+                            valArgs = [];
+                        }
+                    }
                     // console.log(type,name,multy);
                     return {
                         multy : !!multy,
@@ -108,7 +117,7 @@ class Usage{
                             if(type){
                                 let validator = runtime.parser.validators[type];
                                 if(validator){
-                                    let parsedTocken = validator.validate(tocken);
+                                    let parsedTocken = validator.validate(tocken, ...valArgs);
                                     args[name] = parsedTocken;
                                     return true;
                                 }else{
@@ -154,8 +163,8 @@ class Validator{
         this.name = name;
         this.validator = validator;
     }
-    validate(tocken){
-        return this.validator(tocken);
+    validate(tocken, ...args){
+        return this.validator(tocken, ...args);
     }
 }
 
