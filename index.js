@@ -15,10 +15,10 @@ class Parser{
     }
     use(obj){
         arrayify(obj).forEach(o=>{
-            if(obj instanceof Validator){
-                this.validators[obj.name] = obj;
-            } else if(obj instanceof Command){
-                this.commands[obj.name] = obj;
+            if(o instanceof Validator){
+                this.validators[o.name] = o;
+            } else if(o instanceof Command){
+                this.commands[o.name] = o;
             }
         });
     }
@@ -80,12 +80,7 @@ class Command{
         return this.settings.description;
     }
     match(tockens, runtime){
-        for(let i = 0; i < this.settings.usage.length; ++i){
-            if(this.settings.usage[i].match(tockens.slice(), runtime)){
-                return true;
-            }
-        }
-        return false;
+        return this.settings.usage.some(u=>u.match(tockens.slice(), runtime))
     }
     async run(runtime){
         await this.settings.run(runtime);
@@ -117,9 +112,13 @@ class Usage{
                             if(type){
                                 let validator = runtime.parser.validators[type];
                                 if(validator){
-                                    let parsedTocken = validator.validate(tocken, ...valArgs);
-                                    args[name] = parsedTocken;
-                                    return true;
+                                    try{
+                                        let parsedTocken = validator.validate(tocken, ...valArgs);
+                                        args[name] = parsedTocken;
+                                        return true;
+                                    }catch(ve){
+                                        return false;
+                                    }
                                 }else{
                                     console.log("Validator not found");
                                     return false;

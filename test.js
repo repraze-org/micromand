@@ -141,6 +141,31 @@ describe('micromand', function(){
                 done();
             });
         });
+
+        it('should handle validation reject then passing', function(done){
+            let p = new Parser();
+
+            p.use([
+                new Validator('no', function(str){
+                    throw new Error('Invalid arg');
+                }),
+                new Validator('yes', function(str){
+                    return str;
+                })
+            ]);
+
+
+            p.use(new Command('ping', {
+                usage : [
+                    "ping [no:test]",
+                    "ping [yes:test]"
+                ]
+            }, function(runtime){
+                // Nothing
+            }));
+
+            p.run("ping foo").then(done);
+        });
     });
 
     describe('routing', function(){
@@ -196,6 +221,28 @@ describe('micromand', function(){
             }));
 
             p.run("ping foo").then(done);
+        });
+
+        it('should handle argument multi usage', function(done){
+            let p = new Parser();
+
+            p.use(new Validator('route', function(str, target){
+                if(str != target){
+                    throw new Error('Invalid routing');
+                }
+                return str;
+            }));
+
+            p.use(new Command('ping', {
+                usage : [
+                    "ping [route(foo):test]",
+                    "ping [route(bar):test]"
+                ]
+            }, function(runtime){
+                expect(runtime.args.test).to.equal("bar");
+            }));
+
+            p.run("ping bar").then(done);
         });
     });
 });
