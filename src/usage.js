@@ -19,7 +19,7 @@ class Usage{
                     multy: !!multy,
                     match: (token, runtime, args)=>{
                         if(type){
-                            const validator = runtime.parser.validators[type];
+                            const validator = runtime.parser.getValidator(type, true);
                             if(validator){
                                 try{
                                     const parsedToken = validator.validate(token, ...valArgs);

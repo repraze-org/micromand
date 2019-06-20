@@ -1,24 +1,13 @@
-const Validator = require("./validator");
-const Command = require("./command");
+const ParserNode = require("./parser-node");
 const {baseValidators} = require("./base-validators");
 
-const {arrayify} = require("./utils");
+const baseParser = new ParserNode({
+    validators: baseValidators
+});
 
-class Parser{
-    constructor(){
-        this.validators = {};
-        this.commands = {};
-
-        this.use(baseValidators);
-    }
-    use(obj){
-        arrayify(obj).forEach(o=>{
-            if(o instanceof Validator){
-                this.validators[o.name] = o;
-            }else if(o instanceof Command){
-                this.commands[o.name] = o;
-            }
-        });
+class Parser extends ParserNode{
+    constructor(settings){
+        super(Object.assign({parent: baseParser}, settings));
     }
     run(str, environment){
         const runtime = {
@@ -30,8 +19,8 @@ class Parser{
 
         const commandName = tokens[0];
 
-        if(commandName && this.commands[commandName]){
-            const command = this.commands[commandName];
+        if(commandName && this.hasCommand(commandName, true)){
+            const command = this.getCommand(commandName);
             try{
                 if(command.match(tokens, runtime)){
                     return command.run(runtime, environment);

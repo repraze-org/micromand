@@ -384,7 +384,7 @@ describe("micromand", function(){
         });
     });
 
-    describe("routing", function(){
+    describe("routing with choice", function(){
         // shop buy item
         // shop look item
 
@@ -404,19 +404,10 @@ describe("micromand", function(){
             const p = new Parser();
 
             p.use(
-                new Validator("route", function(str, target){
-                    if(str != target){
-                        throw new Error("Invalid routing");
-                    }
-                    return str;
-                })
-            );
-
-            p.use(
                 new Command(
                     "ping",
                     {
-                        usage: "ping [route(foo):test]"
+                        usage: "ping [choice(foo):test]"
                     },
                     function(runtime){
                         expect(runtime.args.test).to.equal("foo");
@@ -431,19 +422,10 @@ describe("micromand", function(){
             const p = new Parser();
 
             p.use(
-                new Validator("route", function(str, foo, bar){
-                    if(foo != "foo" || bar != "bar"){
-                        throw new Error("Invalid routing");
-                    }
-                    return str;
-                })
-            );
-
-            p.use(
                 new Command(
                     "ping",
                     {
-                        usage: "ping [route(foo,bar):test]"
+                        usage: "ping [choice(foo,bar):test]"
                     },
                     function(runtime){
                         expect(runtime.args.test).to.equal("foo");
@@ -458,19 +440,28 @@ describe("micromand", function(){
             const p = new Parser();
 
             p.use(
-                new Validator("route", function(str, target){
-                    if(str != target){
-                        throw new Error("Invalid routing");
+                new Command(
+                    "ping",
+                    {
+                        usage: ["ping [choice(foo):test]", "ping [choice(bar):test]"]
+                    },
+                    function(runtime){
+                        expect(runtime.args.test).to.equal("bar");
                     }
-                    return str;
-                })
+                )
             );
 
+            p.run("ping bar").then(done);
+        });
+
+        it("should handle argument multi usage", function(done){
+            const p = new Parser();
+            // TODO multiple level of choice
             p.use(
                 new Command(
                     "ping",
                     {
-                        usage: ["ping [route(foo):test]", "ping [route(bar):test]"]
+                        usage: ["ping [choice(foo):test]", "ping [choice(bar):test]"]
                     },
                     function(runtime){
                         expect(runtime.args.test).to.equal("bar");
