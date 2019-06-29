@@ -1,6 +1,6 @@
 const chai = require("chai");
 const expect = chai.expect;
-const {Parser, Command, Validator} = require("./index");
+const {Parser, Command, Validator} = require("../");
 
 // Tester
 

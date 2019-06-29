@@ -1,6 +1,6 @@
-const Validator = require("./src/validator");
-const Command = require("./src/command");
-const Parser = require("./src/parser");
+const Validator = require("./lib/validator");
+const Command = require("./lib/command");
+const Parser = require("./lib/parser");
 
 module.exports = {
     Parser,
